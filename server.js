@@ -49,7 +49,9 @@ wss.on('connection', (ws) => {
 			console.log("sending authoring connected message");
 			drawing_client.send("authoring_client_connected");
 		}
-	} 
+	} else if (clientName === 'browser') {
+		browser_client = ws;
+	}
 
 	ws.on('message', function incoming(message) {
 		console.log('message', clientName, message);
