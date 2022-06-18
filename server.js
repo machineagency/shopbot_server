@@ -55,7 +55,7 @@ wss.on('connection', (ws) => {
 		console.log('message', clientName, message);
 
 		if (browser_client) {
-			//browser_client.send(message);
+			browser_client.send(message);
 		}
 		var json_data = JSON.parse(message);
 		/*if (json_data.name == "fabricator") {
