@@ -5,3 +5,7 @@ This example accompanies the
 tutorial.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+## Additional Information
+
+**URL:** https://machineagency-shopbot-server.herokuapp.com/
