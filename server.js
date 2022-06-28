@@ -34,9 +34,6 @@ wss.on('connection', (ws) => {
 			authoring_client.send("drawing client connected");
 		}
 
-		if (drawing_client) {
-			drawing_client.close();
-		}
 		drawing_client = ws;
 		if (fabricator_client) {
 			drawing_client.send("fabricator connected");
