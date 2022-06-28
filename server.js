@@ -89,25 +89,6 @@ wss.on('connection', (ws) => {
 			}
 			fabricator_client.send(JSON.stringify(json_data));
 		}
-		if (json_data.type == "synchronize" || json_data.type == "behavior_data" || json_data.type == "authoring_response" || json_data.type == "storage_data" ) {
-			if (authoring_client) {
-				authoring_client.send(JSON.stringify(json_data));
-			}
-		}
-
-		if (json_data.type == "brush_init") {
-			ws.send("init_data_received");
-		} else {
-			ws.send("message received");
-		}
-
-		if (json_data.type == "data_request" || json_data.type == "synchronize_request" || json_data.type == "authoring_request" || json_data.type == "storage_request") {
-			if(json_data.requester == "authoring" && authoring_client && drawing_client){
-				console.log("requesting authoring response from drawing client");
-				drawing_client.send(JSON.stringify(json_data));
-			}
-		}
-
 
 	});
 
