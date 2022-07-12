@@ -39,8 +39,6 @@ wss.on('connection', (ws) => {
 	}
 
 	ws.on('message', function incoming(message) {
-		console.log('message', clientName, message);
-
 		if (browser_client) {
 			browser_client.send(message);
 		}
@@ -59,11 +57,12 @@ wss.on('connection', (ws) => {
 		if (json_data.type == "fabricator_data") {
 			if (drawing_client) {
 				drawing_client.send(JSON.stringify(json_data));
-
+                console.log('message', clientName, message);
 			}
 		}
         if (json_data.type == "canvas" && browser_client) {
             browser_client.send(message);
+            console.log("message canvas data sent");
         }
 		if (json_data.type == "gcode" && fabricator_client) {
 
@@ -71,6 +70,7 @@ wss.on('connection', (ws) => {
 				browser_client.send("gcode generated: " + JSON.stringify(json_data) + "\n");
 			}
 			fabricator_client.send(JSON.stringify(json_data));
+            console.log('message', clientName, message);
 		}
 
 	});
@@ -85,7 +85,6 @@ wss.on('connection', (ws) => {
 			drawing_client = null;
 		} else if (clientName == "fabricator") {
 			fabricator_client = null;
-
 		} else if (clientName == "browser") {
 			browser_client = null;
 		}
