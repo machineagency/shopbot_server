@@ -4,6 +4,7 @@ function deserializeCanvas(data) {
     img.onload = function() {
         canvas.width = img.width;
         canvas.height = img.height;
+        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
         canvas.getContext("2d").drawImage(img, 0, 0);
     };
 
