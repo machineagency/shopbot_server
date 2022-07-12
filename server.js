@@ -8,7 +8,6 @@ const path = require('path');
 var drawing_client;
 var fabricator_client;
 var browser_client;
-var authoring_client;
 var clients = [];
 
 
@@ -30,10 +29,6 @@ wss.on('connection', (ws) => {
 	var index = clients.push(connection) - 1;
 	var clientName = ws.protocol;
 	if (clientName == 'drawing') {
-		if (authoring_client) {
-			authoring_client.send("drawing client connected");
-		}
-
 		drawing_client = ws;
 		if (fabricator_client) {
 			drawing_client.send("fabricator connected");
@@ -42,12 +37,6 @@ wss.on('connection', (ws) => {
 		fabricator_client = ws;
 
 
-	} else if (clientName == 'authoring') {
-		authoring_client = ws;
-		if (drawing_client) {
-			console.log("sending authoring connected message");
-			drawing_client.send("authoring_client_connected");
-		}
 	} else if (clientName === 'browser') {
 		browser_client = ws;
 	}
@@ -71,12 +60,7 @@ wss.on('connection', (ws) => {
 
 		}
 		if (json_data.type == "fabricator_data") {
-
-			if (browser_client) {
-				//browser_client.send("fabrication data generated " + String(authoring_client));
-			}
 			if (drawing_client) {
-				//browser_client.send("sending fab data to drawing client");
 				drawing_client.send(JSON.stringify(json_data));
 
 			}
@@ -96,9 +80,6 @@ wss.on('connection', (ws) => {
 		console.log(clientName + ' client disconnected');
 		if (clientName != "browser" && browser_client) {
 			browser_client.send(clientName + ' client disconnected');
-		}
-		if (clientName == "authoring") {
-			authoring_client = null;
 		}
 		if (clientName == "drawing") {
 			drawing_client = null;
