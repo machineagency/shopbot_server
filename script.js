@@ -12,11 +12,11 @@ function deserializeCanvas(data) {
 
 function initializeHeartbeat(ws) {
     const period = 10000;
-    const packet = {
-        type: "heartbeat",
-        timestamp: new Date().toLocaleTimeString()
-    };
     const sendHeartbeat = () => {
+        const packet = {
+            type: "heartbeat",
+            timestamp: new Date().toLocaleTimeString()
+        };
         ws.send(JSON.stringify(packet));
     };
     return setInterval(sendHeartbeat, period);
