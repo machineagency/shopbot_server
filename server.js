@@ -3,13 +3,11 @@ const express = require('express');
 const SocketServer = require('ws').Server;
 const path = require('path');
 
-
 // list of currently connected clients
 var drawing_client;
 var fabricator_client;
 var browser_client;
 var clients = [];
-
 
 const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'index.html');
@@ -65,6 +63,9 @@ wss.on('connection', (ws) => {
 
 			}
 		}
+        if (json_data.type == "canvas" && browser_client) {
+            browser_client.send(message);
+        }
 		if (json_data.type == "gcode" && fabricator_client) {
 
 			if (browser_client) {
