@@ -1,15 +1,11 @@
 <html>
+  <head>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+  </head>
   <body>
-    <p id='server-time'></p>
-    <script>
-      var HOST = location.origin.replace(/^http/, 'ws')
-      //var HOST = 'ws://localhost:5000'
-      var ws = new WebSocket(HOST,'browser');
-      var el = document.getElementById('server-time');
-
-      ws.onmessage = function (event) {
-        el.innerHTML =  el.innerHTML + event.data;
-      };
-    </script>
+    <div id="container">
+      <canvas id="tss-canvas"></canvas>
+    </div>
   </body>
 </html>
