@@ -7,6 +7,7 @@ const path = require('path');
 var drawing_client;
 var fabricator_client;
 var browser_client;
+var tss_client;
 var clients = [];
 
 const PORT = process.env.PORT || 3000;
@@ -33,9 +34,11 @@ wss.on('connection', (ws) => {
 	} else if (clientName == 'fabricator') {
 		fabricator_client = ws;
 
-
 	} else if (clientName === 'browser') {
 		browser_client = ws;
+
+	} else if (clientName === 'tss') {
+		tss_client = ws;
 	}
 
 	ws.on('message', function incoming(message) {
@@ -63,6 +66,10 @@ wss.on('connection', (ws) => {
         if (json_data.type == "canvas" && browser_client) {
             browser_client.send(message);
             console.log("message canvas data sent");
+        }
+        if (json_data.type == "tssInstructions" && tss_client) {
+            tss_client.send(message);
+            console.log("message tss data sent");
         }
 		if (json_data.type == "gcode" && fabricator_client) {
 
