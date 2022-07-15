@@ -27,7 +27,7 @@ const heartbeat = setInterval(() => {
       timestamp: new Date().toLocaleTimeString()
     };
     clients.forEach((client) => {
-        client.send(packet);
+        client.send(JSON.stringify(packet));
     });
 }, heartbeatDelay);
 
