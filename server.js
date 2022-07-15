@@ -20,6 +20,17 @@ const wss = new SocketServer({
 	server
 });
 
+const heartbeatDelay = 10000;
+const heartbeat = setInterval(() => {
+    const packet = {
+      type: "heartbeat",
+      timestamp: new Date().toLocaleTimeString()
+    };
+    clients.forEach((client) => {
+        client.send(packet);
+    });
+}, heartbeatDelay);
+
 wss.on('connection', (ws) => {
 	console.log('Client connected', ws.protocol);
 	var protocol = ws.protocol;
@@ -90,6 +101,8 @@ wss.on('connection', (ws) => {
 		}
 		if (clientName == "drawing") {
 			drawing_client = null;
+        } else if (clientName == "tss") {
+            tss_client = null;
 		} else if (clientName == "fabricator") {
 			fabricator_client = null;
 		} else if (clientName == "browser") {
