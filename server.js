@@ -20,6 +20,9 @@ const wss = new SocketServer({
 	server
 });
 
+// FIXME: need a better way of actually storing last ping times to check
+// keep alive times, otherwise opening multiple pages with sockets could
+// cause problems.
 const heartbeatDelay = 10000;
 const heartbeat = setInterval(() => {
     const packet = {
@@ -78,9 +81,10 @@ wss.on('connection', (ws) => {
             browser_client.send(message);
             console.log("message canvas data sent");
         }
-        if (json_data.type == "tssInstructions" && tss_client) {
+        if (json_data.type == "tssInstructions"
+            || json_data.type == "tssEnvelope" && tss_client) {
             tss_client.send(message);
-            console.log("message tss data sent");
+            console.log(`message ${json_data.type} sent`);
         }
 		if (json_data.type == "gcode" && fabricator_client) {
 
