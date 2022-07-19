@@ -30,7 +30,9 @@ const heartbeat = setInterval(() => {
       timestamp: new Date().toLocaleTimeString()
     };
     clients.forEach((client) => {
-        client.send(JSON.stringify(packet));
+        if (client !== fabricator_client) {
+            client.send(JSON.stringify(packet));
+        }
     });
 }, heartbeatDelay);
 
