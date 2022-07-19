@@ -53,6 +53,8 @@ wss.on('connection', (ws) => {
 
 	} else if (clientName === 'tss') {
 		tss_client = ws;
+	} else if (clientName === 'drawing') {
+	    drawing_client = ws;
 	}
 
 	ws.on('message', function incoming(message) {
