@@ -78,7 +78,8 @@ wss.on('connection', (ws) => {
 		if (json_data.type == "fabricator_data") {
 			if (drawing_client) {
 				drawing_client.send(JSON.stringify(json_data));
-                console.log('message', clientName, message);
+                let fabData = message.toString();
+                console.log('message', clientName, fabData);
 			}
 		}
         if (json_data.type == "canvas" && browser_client) {
