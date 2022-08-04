@@ -60,46 +60,50 @@ wss.on('connection', (ws) => {
 	}
 
 	ws.on('message', function incoming(message) {
-		if (browser_client) {
-			browser_client.send(message);
-		}
-		var json_data = JSON.parse(message);
-		if (json_data.name == "fabricator") {
-			if (browser_client) {
-				browser_client.send("fabricator connected");
-			}
-			fabricator_client = ws;
-			clientName = "fabricator";
-			if (drawing_client) {
-				drawing_client.send("fabricator connected");
-			}
+        try {
+            if (browser_client) {
+                browser_client.send(message);
+            }
+            var json_data = JSON.parse(message);
+            if (json_data.name == "fabricator") {
+                if (browser_client) {
+                    browser_client.send("fabricator connected");
+                }
+                fabricator_client = ws;
+                clientName = "fabricator";
+                if (drawing_client) {
+                    drawing_client.send("fabricator connected");
+                }
 
-		}
-		if (json_data.type == "fabricator_data") {
-			if (drawing_client) {
-				drawing_client.send(JSON.stringify(json_data));
-                let fabData = message.toString();
-                console.log('message', clientName, fabData);
-			}
-		}
-        if (json_data.type == "canvas" && browser_client) {
-            browser_client.send(message);
-            console.log("message canvas data sent");
+            }
+            if (json_data.type == "fabricator_data") {
+                if (drawing_client) {
+                    drawing_client.send(JSON.stringify(json_data));
+                    let fabData = message.toString();
+                    console.log('message', clientName, fabData);
+                }
+            }
+            if (json_data.type == "canvas" && browser_client) {
+                browser_client.send(message);
+                console.log("message canvas data sent");
+            }
+            if (json_data.type == "tssInstructions"
+                || json_data.type == "tssEnvelope" && tss_client) {
+                tss_client.send(message);
+                console.log(`message ${json_data.type} sent`);
+            }
+            if (json_data.type == "gcode" && fabricator_client) {
+
+                if (browser_client) {
+                    browser_client.send("gcode generated: " + JSON.stringify(json_data) + "\n");
+                }
+                fabricator_client.send(JSON.stringify(json_data));
+                console.log('message', clientName, message);
+            }
         }
-        if (json_data.type == "tssInstructions"
-            || json_data.type == "tssEnvelope" && tss_client) {
-            tss_client.send(message);
-            console.log(`message ${json_data.type} sent`);
+        catch (e) {
+            console.error(e);
         }
-		if (json_data.type == "gcode" && fabricator_client) {
-
-			if (browser_client) {
-				browser_client.send("gcode generated: " + JSON.stringify(json_data) + "\n");
-			}
-			fabricator_client.send(JSON.stringify(json_data));
-            console.log('message', clientName, message);
-		}
-
 	});
 
 
