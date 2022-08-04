@@ -23,7 +23,7 @@ const wss = new SocketServer({
 // FIXME: need a better way of actually storing last ping times to check
 // keep alive times, otherwise opening multiple pages with sockets could
 // cause problems.
-const heartbeatDelay = 10000;
+const heartbeatDelay = 50000;
 const heartbeat = setInterval(() => {
     const packet = {
       type: "heartbeat",
