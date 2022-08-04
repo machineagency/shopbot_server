@@ -59,7 +59,7 @@ wss.on('connection', (ws) => {
 	}
 
 	ws.on('message', function incoming(message) {
-        if (message === undefined) {
+        if (message === undefined || message == null) {
             console.log(`Received empty message from ${clientName}`);
         }
         try {
