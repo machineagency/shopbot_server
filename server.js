@@ -93,11 +93,9 @@ wss.on('connection', (ws) => {
                 tss_client.send(message);
                 console.log(`message ${json_data.type} sent`);
             }
-            if (json_data.type == "gcode" && fabricator_client) {
-
-                if (browser_client) {
-                    browser_client.send("gcode generated: " + JSON.stringify(json_data) + "\n");
-                }
+            if (fabricator_client && (
+                    json_data.type == "gcode"
+                    || json_data.type == "requestMachineState")) {
                 fabricator_client.send(JSON.stringify(json_data));
                 console.log('message', clientName, message);
             }
