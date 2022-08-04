@@ -52,7 +52,6 @@ wss.on('connection', (ws) => {
 
 	} else if (clientName === 'browser') {
 		browser_client = ws;
-
 	} else if (clientName === 'tss') {
 		tss_client = ws;
 	} else if (clientName === 'drawing') {
@@ -60,6 +59,9 @@ wss.on('connection', (ws) => {
 	}
 
 	ws.on('message', function incoming(message) {
+        if (message === undefined) {
+            console.log(`Received empty message from ${clientName}`);
+        }
         try {
             if (browser_client) {
                 browser_client.send(message);
@@ -74,7 +76,6 @@ wss.on('connection', (ws) => {
                 if (drawing_client) {
                     drawing_client.send("fabricator connected");
                 }
-
             }
             if (json_data.type == "fabricator_data") {
                 if (drawing_client) {
