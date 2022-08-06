@@ -60,29 +60,19 @@ wss.on('connection', (ws) => {
 
 	ws.on('message', function incoming(message) {
         if (message === undefined || message == null) {
-            console.log(`Received empty message from ${clientName}`);
+            console.log(`Received empty message, disregarding.`);
+            return;
         }
         try {
             if (browser_client) {
                 browser_client.send(message);
             }
             var json_data = JSON.parse(message);
-            if (json_data.name == "fabricator") {
-                if (browser_client) {
-                    browser_client.send("fabricator connected");
-                }
-                fabricator_client = ws;
-                clientName = "fabricator";
-                if (drawing_client) {
-                    drawing_client.send("fabricator connected");
-                }
-            }
             if (json_data.type == "fabricatorData") {
                 if (drawing_client) {
                     drawing_client.send(JSON.stringify(json_data));
                     let fabData = message.toString();
                     console.log('message', clientName, fabData);
-                    drawing_client.send(message);
                 }
             }
             if (json_data.type == "canvas" && browser_client) {
