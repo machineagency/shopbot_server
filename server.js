@@ -68,19 +68,16 @@ wss.on('connection', (ws) => {
                 browser_client.send(message);
             }
             var json_data = JSON.parse(message);
-            if (json_data.type == "fabricatorData") {
-                if (drawing_client) {
-                    drawing_client.send(JSON.stringify(json_data));
-                    let fabData = message.toString();
-                    console.log('message', clientName, fabData);
-                }
+            if (drawing_client && json_data.type == "fabricatorData") {
+                drawing_client.send(JSON.stringify(json_data));
+                console.log('message', clientName, fabData);
             }
-            if (json_data.type == "canvas" && browser_client) {
+            if (browser_client && json_data.type == "canvas") {
                 browser_client.send(message);
                 console.log("message canvas data sent");
             }
-            if (json_data.type == "tssInstructions"
-                || json_data.type == "tssEnvelope" && tss_client) {
+            if (tss_client && (json_data.type == "tssInstructions"
+                || json_data.type == "tssEnvelope")) {
                 tss_client.send(message);
                 console.log(`message ${json_data.type} sent`);
             }
