@@ -77,6 +77,7 @@ wss.on('connection', (ws) => {
                 console.log("message canvas data sent");
             }
             if (tss_client && (json_data.type == "tssInstructions"
+                || json_data.type == "tssMachineParams"
                 || json_data.type == "tssEnvelope")) {
                 tss_client.send(message);
                 console.log(`message ${json_data.type} sent`);
