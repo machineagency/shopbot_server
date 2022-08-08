@@ -70,6 +70,7 @@ wss.on('connection', (ws) => {
             var json_data = JSON.parse(message);
             if (drawing_client && json_data.type == "fabricatorData") {
                 drawing_client.send(JSON.stringify(json_data));
+                let fabData = message.toString();
                 console.log('message', clientName, fabData);
             }
             if (browser_client && json_data.type == "canvas") {
