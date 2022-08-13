@@ -10,6 +10,20 @@ var browser_client;
 var tss_client;
 var clients = [];
 
+function getConnectedClientNames() {
+    let clients = [];
+    if (drawing_client) {
+        clients.push("drawing");
+    }
+    if (tss_client) {
+        clients.push("tss");
+    }
+    if (fabricator_client) {
+        clients.push("fabricator");
+    }
+    return clients;
+}
+
 const PORT = process.env.PORT || 3000;
 
 const server = express()
@@ -62,7 +76,7 @@ wss.on('connection', (ws) => {
     if (drawing_client) {
         let connectNotice = {
             type: "connectionStatus",
-            who: clients,
+            who: getConnectedClientNames(),
             status: "connect"
         };
         drawing_client.send(JSON.stringify(connectNotice));
