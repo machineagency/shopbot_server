@@ -24,6 +24,22 @@ function getConnectedClientNames() {
     return clients;
 }
 
+// FIXME: need a better way of actually storing last ping times to check
+// keep alive times, otherwise opening multiple pages with sockets could
+// cause problems.
+const heartbeatDelay = 50000;
+const heartbeat = setInterval(() => {
+    const packet = {
+      type: "heartbeat",
+      timestamp: new Date().toLocaleTimeString()
+    };
+    clients.forEach((client) => {
+        if (client !== fabricator_client) {
+            client.send(JSON.stringify(packet));
+        }
+    });
+}, heartbeatDelay);
+
 const PORT = process.env.PORT || 3000;
 
 const server = express()
@@ -104,21 +120,21 @@ wss.on('connection', (ws) => {
                 fabricator_client.send(JSON.stringify(json_data));
                 console.log('message', clientName, message);
             }
-            if (json_data.type == "heartbeat") {
-                let ack = {
-                    name: "server",
-                    type: "ack"
-                };
-                if (json_data.name == "drawing" && drawing_client) {
-                    drawing_client.send(JSON.stringify(ack));
-                }
-                if (json_data.name == "tss" && tss_client) {
-                    tss_client.send(JSON.stringify(ack));
-                }
-                if (json_data.name == "fabricator" && fabricator_client) {
-                    fabricator_client.send(JSON.stringify(ack));
-                }
-            }
+            // if (json_data.type == "heartbeat") {
+            //     let ack = {
+            //         name: "server",
+            //         type: "ack"
+            //     };
+            //     if (json_data.name == "drawing" && drawing_client) {
+            //         drawing_client.send(JSON.stringify(ack));
+            //     }
+            //     if (json_data.name == "tss" && tss_client) {
+            //         tss_client.send(JSON.stringify(ack));
+            //     }
+            //     if (json_data.name == "fabricator" && fabricator_client) {
+            //         fabricator_client.send(JSON.stringify(ack));
+            //     }
+            // }
         }
         catch (e) {
             console.error(e);
