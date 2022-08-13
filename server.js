@@ -34,22 +34,6 @@ const wss = new SocketServer({
 	server
 });
 
-// FIXME: need a better way of actually storing last ping times to check
-// keep alive times, otherwise opening multiple pages with sockets could
-// cause problems.
-// const heartbeatDelay = 50000;
-// const heartbeat = setInterval(() => {
-//     const packet = {
-//       type: "heartbeat",
-//       timestamp: new Date().toLocaleTimeString()
-//     };
-//     clients.forEach((client) => {
-//         if (client !== fabricator_client) {
-//             client.send(JSON.stringify(packet));
-//         }
-//     });
-// }, heartbeatDelay);
-
 wss.on('connection', (ws) => {
 	console.log('Client connected', ws.protocol);
 	var protocol = ws.protocol;
@@ -73,14 +57,14 @@ wss.on('connection', (ws) => {
 	}
 
     // On drawing client connection, send it the list of all known connections.
-    // if (drawing_client) {
-    //     let connectNotice = {
-    //         type: "connectionStatus",
-    //         who: getConnectedClientNames(),
-    //         status: "connect"
-    //     };
-    //     drawing_client.send(JSON.stringify(connectNotice));
-    // }
+    if (drawing_client) {
+        let connectNotice = {
+            type: "connectionStatus",
+            who: getConnectedClientNames(),
+            status: "connect"
+        };
+        drawing_client.send(JSON.stringify(connectNotice));
+    }
 
 	ws.on('message', function incoming(message) {
         if (message === undefined || message == null) {
@@ -137,13 +121,13 @@ wss.on('connection', (ws) => {
 		clients.splice(index, 1);
 
         // Send a disconnect notice to the drawing client
-        // if (drawing_client) {
-        //     let disconnectNotice = {
-        //         type: "connectionStatus",
-        //         who: [clientName.toString()],
-        //         status: "disconnect"
-        //     };
-        //     drawing_client.send(JSON.stringify(disconnectNotice));
-        // }
+        if (drawing_client) {
+            let disconnectNotice = {
+                type: "connectionStatus",
+                who: [clientName.toString()],
+                status: "disconnect"
+            };
+            drawing_client.send(JSON.stringify(disconnectNotice));
+        }
 	});
 });
