@@ -58,6 +58,16 @@ wss.on('connection', (ws) => {
 	    drawing_client = ws;
 	}
 
+    // On drawing client connection, send it the list of all known connections.
+    if (drawing_client) {
+        let connectNotice = {
+            type: "connectionStatus",
+            who: clients,
+            status: "connect"
+        };
+        drawing_client.send(JSON.stringify(connectNotice));
+    }
+
 	ws.on('message', function incoming(message) {
         if (message === undefined || message == null) {
             console.log(`Received empty message, disregarding.`);
@@ -111,5 +121,15 @@ wss.on('connection', (ws) => {
 			browser_client = null;
 		}
 		clients.splice(index, 1);
+
+        // Send a disconnect notice to the drawing client
+        if (drawing_client) {
+            let disconnectNotice = {
+                type: "connectionStatus",
+                who: [clientName.toString()],
+                status: "disconnect"
+            };
+            drawing_client.send(JSON.stringify(disconnectNotice));
+        }
 	});
 });
