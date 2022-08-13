@@ -35,6 +35,13 @@ const wss = new SocketServer({
 });
 
 wss.on('connection', (ws) => {
+    if (clientName === "drawing" && drawing_client
+        || clientName === "tss" && tss_client
+        || clientName === "fabricator" && fabricator_client) {
+        console.log(`Rejecting duplicate connection ${clientName}.`);
+        ws.close(409, "There is already an open connection.");
+        return;
+    }
 	console.log('Client connected', ws.protocol);
 	var protocol = ws.protocol;
 	var connection = ws;
