@@ -97,6 +97,21 @@ wss.on('connection', (ws) => {
                 fabricator_client.send(JSON.stringify(json_data));
                 console.log('message', clientName, message);
             }
+            if (json_data.type == "heartbeat") {
+                let ack = {
+                    name: "server",
+                    type: "ack"
+                };
+                if (json_data.name == "drawing" && drawing_client) {
+                    drawing_client.send(JSON.stringify(ack));
+                }
+                if (json_data.name == "tss" && tss_client) {
+                    tss_client.send(JSON.stringify(ack));
+                }
+                if (json_data.name == "fabricator" && fabricator_client) {
+                    fabricator_client.send(JSON.stringify(ack));
+                }
+            }
         }
         catch (e) {
             console.error(e);
