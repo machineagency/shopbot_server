@@ -8,6 +8,7 @@ var drawing_client;
 var fabricator_client;
 var browser_client;
 var tss_client;
+var sensor_breakbeam_client;
 var clients = [];
 
 function getConnectedClientNames() {
@@ -20,6 +21,9 @@ function getConnectedClientNames() {
     }
     if (fabricator_client) {
         clients.push("fabricator");
+    }
+    if (sensor_breakbeam_client) {
+        clients.push("sensorBreakbeam");
     }
     return clients;
 }
@@ -77,6 +81,8 @@ wss.on('connection', (ws) => {
 		tss_client = ws;
 	} else if (clientName === 'drawing') {
 	    drawing_client = ws;
+	} else if (clientName === 'sensorBreakbeam') {
+	    sensor_breakbeam_client = ws;
 	}
 
     // On drawing client connection, send it the list of all known connections.
@@ -119,6 +125,9 @@ wss.on('connection', (ws) => {
                     || json_data.type == "requestMachineState")) {
                 fabricator_client.send(JSON.stringify(json_data));
                 console.log('message', clientName, message);
+            }
+            if (json_data.name === "sensorBreakbeam") {
+                console.log(message.toString());
             }
             // if (json_data.type == "heartbeat") {
             //     let ack = {
