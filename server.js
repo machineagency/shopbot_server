@@ -105,10 +105,14 @@ wss.on('connection', (ws) => {
                 browser_client.send(message);
             }
             var json_data = JSON.parse(message);
-            if (drawing_client && json_data.type == "fabricatorData") {
-                drawing_client.send(JSON.stringify(json_data));
-                let fabData = message.toString();
-                console.log('message', clientName, fabData);
+            if (json_data.type == "fabricatorData") {
+                if (drawing_client) {
+                    drawing_client.send(JSON.stringify(json_data));
+                }
+                if (tss_client) {
+                    tss_client.send(JSON.stringify(json_data));
+                }
+                console.log(JSON.stringify(message));
             }
             if (browser_client && json_data.type == "canvas") {
                 browser_client.send(message);
