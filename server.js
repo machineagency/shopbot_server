@@ -120,6 +120,7 @@ wss.on('connection', (ws) => {
             }
             if (tss_client && (json_data.type == "tssInstructions"
                 || json_data.type == "tssMachineParams"
+                || json_data.type == "tssSelection"
                 || json_data.type == "tssEnvelope")) {
                 tss_client.send(message);
                 console.log(`message ${json_data.type} sent`);
