@@ -112,7 +112,7 @@ wss.on('connection', (ws) => {
                 if (tss_client) {
                     tss_client.send(JSON.stringify(json_data));
                 }
-                console.log(JSON.stringify(message));
+                console.log(message);
             }
             if (browser_client && json_data.type == "canvas") {
                 browser_client.send(message);
